@@ -12,6 +12,8 @@ import urllib
 import psycopg2
 import requests
 
+from math import sqrt
+
 rs = requests.Session()
 rs.headers.update({'User-Agent': 'pbot'})
 db = psycopg2.connect(config.settings['eve_dsn'])
