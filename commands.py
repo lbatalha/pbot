@@ -177,23 +177,25 @@ def roll(bot, target, nick, command, text):
 
 def ly(bot,target, nick, command, text):
 	split = text.lower().split()
+	print("test")
 	if len(split) != 2:
-		bot.say('usage: %s [from] [to]' % command)
+		bot.say(target, 'usage: %s [from] [to]' % (command))
 		return
 	with db.cursor() as curs:
 		curs.execute('''
-					SELECT x, y, z
-					FROM "mapSolarSystems"
-					WHERE lower("solarSystemName") LIKE %s
-					OR lower("solarSystemName") LIKE %s;
-					''', split)
+				SELECT x, y, z
+				FROM "mapSolarSystems"
+				WHERE lower("solarSystemName") LIKE %s
+				OR lower("solarSystemName") LIKE %s;
+				''', split)
 		result = curs.fetchmany(2)
 	
-	if len(result) is 2:
+	if len(result) == 2:
 		d = sqrt(sum( [(a-b)**2 for a,b in zip(result[0],result[1])] )) / 9.4605284e15 #meters-per-lightyear
 	else:
+		bot.say('ERROR: one or more systems not found!')
 		return
-	bot.say(target,'%.3f' % d))
+	bot.say(target,'%.3f' % (d))
 
 handlers = {
 	'pc': price_check,
@@ -201,6 +203,7 @@ handlers = {
 	'reload': reload,
 	'calc': calc,
 	'roll': roll,
+	'ly' : ly
 }
 
 youtube_re = re.compile('((youtube\.com\/watch\?\S*v=)|(youtu\.be/))([a-zA-Z0-9-_]+)')
@@ -242,9 +245,9 @@ def python_multiline(bot, msg):
 	code = '\n'.join(bot.scripts[msg.nick]) + '\n\n'
 	bot.say(msg.target, '%s: %s' % (msg.nick, python(code)))
 
-PATH = os.environ['PATH']
-username = os.getlogin()
-PATH = ':'.join(filter(lambda p: username not in p, PATH.split(':'))) # filter out virtualenv
+#PATH = os.environ['PATH']
+#username = os.getlogin()
+#PATH = ':'.join(filter(lambda p: username not in p, PATH.split(':'))) # filter out virtualenv
 def python(code):
 	pypy = subprocess.Popen(['pypy-sandbox'], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE, env={'PATH': PATH}, universal_newlines=True, preexec_fn=os.setpgrp)
