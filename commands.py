@@ -173,6 +173,25 @@ def roll(bot, target, nick, command, text):
 	result = split[1].split('=', 1)[1]
 	bot.say(target, "%s: %s = %s" % (nick, details, result))
 
+def ly(bot,target, nick, command, text):
+	split = text.lower().split()
+	if len(split) != 2:
+		bot.say('usage: %s [from] [to]' % command)
+		return
+	with db.cursor() as curs:
+		curs.execute('''
+					SELECT x, y, z
+					FROM "mapSolarSystems"
+					WHERE lower("solarSystemName") LIKE %s
+					OR lower("solarSystemName") LIKE %s;
+					''', split)
+		result = curs.fetchmany(2)
+	
+	if len(result) is 2:
+		d = sqrt(sum( [(a-b)**2 for a,b in zip(result[0],result[1])] )) / 9.4605284e15 #meters-per-lightyear
+	else:
+		return
+	bot.say(target,'%.3f' % d))
 
 handlers = {
 	'pc': price_check,
