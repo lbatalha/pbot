@@ -188,22 +188,24 @@ def ly(bot,target, nick, command, text):
 				OR lower("solarSystemName") LIKE %s;
 				''', split)
 		result = curs.fetchmany(2)
-	
-	if len(result) == 2:
+
+	if len(result) == 2 :
 		d = sqrt(sum( [(a-b)**2 for a,b in zip(result[0],result[1])] )) / 9.4605284e15 #meters-per-lightyear
-		ships = ""
 		sr = {
 			'CAP': 2.5, #jump range for all other ships
 			'BO': 4.0, #jump freighters
 			'JF': 5.0, #black ops
 			}
+		jdc = ""
+		
 		for s,r in sr.items():
-			for l in range(1,5):
-				if d < r*(l*0.2+1):
-					ships = ships + s + ": " + str(l) + "; "
-				break
-
-		bot.say(target,'%.3fly, Skill: %s' % (d,ships))
+			for l in range(1,6):
+				if d <= r*(l*0.2+1):
+					jdc = jdc + s + ": " + str(l) + "; "
+					break
+		if not jdc:
+			jdc = "Out of range"
+		bot.say(target,'%.3fly, JDC: %s' % (d,jdc))
 	else:
 		bot.say(target, 'ERROR: one or more systems not found!')
 		return
