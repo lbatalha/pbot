@@ -190,32 +190,30 @@ def ly(bot, target, nick, command, text):
 		result = curs.fetchmany(2)
 
 	if len(result) == 2:
-		d = 0
-		for src, dst in zip(result[0], result[1]):
-			d = d + (src-dst)**2
-		d = sqrt(d) / 9.4605284e15 #meters-per-lightyear
-		sr = {
-			'CAP:': 2.5, #jump range for all other ships
-			'BO:': 4.0, #blackops
-			'JF:': 5.0, #jump freighters
-			}
+		dist = 0
+		for system1, system2 in zip(result[0], result[1]):
+			dist += (system1-system2)**2
+		dist = sqrt(dist) / 9.4605284e15 # meters per lightyear
+		shipranges = {
+			'CAP:': 2.5, # jump range for all other ships
+			'BO:': 4.0, # blackops
+			'JF:': 5.0, # jump freighters
+		}
 		jdc = []
-		
-		for s, r in sr.items():
-			jdc.append(s)
-			for l in range(0,6):
-				if d <= r*(l*0.2+1):
-					jdc.append(str(l))
+
+		for ship, jumprange in shipranges.items():
+			jdc.append(ship)
+			for level in range(0,6):
+				if dist <= jumprange*(level*0.2+1):
+					jdc.append(str(level))
 					break
-				elif d > r*2:
-					jdc.append('N/A')
-					break
-			continue
-		bot.say(target, '%.3fly, %s' % (d,' '.join(jdc)))
+			else:
+				jdc.append('N/A')
+		bot.say(target, '%.3fly, %s' % (dist,' '.join(jdc)))
 	else:
 		bot.say(target, 'ERROR: one or more systems not found!')
 		return
-	
+
 
 handlers = {
 	'pc': price_check,
