@@ -176,7 +176,7 @@ def roll(bot, target, nick, command, text):
 	bot.say(target, "%s: %s = %s" % (nick, details, result))
 
 def ly(bot, target, nick, command, text):
-	split = [n + "%" for n in text.lower().split()]
+	split = [n + '%' for n in text.lower().split()]
 	if len(split) != 2:
 		bot.say(target, 'usage: %s [from] [to]' % (command))
 		return
@@ -191,8 +191,8 @@ def ly(bot, target, nick, command, text):
 
 	if len(result) == 2:
 		dist = 0
-		for system1, system2 in zip(result[0], result[1]):
-			dist += (system1-system2)**2
+		for d1, d2 in zip(result[0], result[1]):
+			dist += (d1-d2)**2
 		dist = sqrt(dist) / 9.4605284e15 # meters per lightyear
 		shipranges = {
 			'CAP:': 2.5, # jump range for all other ships
@@ -200,7 +200,6 @@ def ly(bot, target, nick, command, text):
 			'JF:': 5.0, # jump freighters
 		}
 		jdc = []
-
 		for ship, jumprange in shipranges.items():
 			jdc.append(ship)
 			for level in range(0,6):
@@ -221,7 +220,7 @@ handlers = {
 	'reload': reload,
 	'calc': calc,
 	'roll': roll,
-	'ly' : ly
+	'ly' : ly,
 }
 
 youtube_re = re.compile('((youtube\.com\/watch\?\S*v=)|(youtu\.be/))([a-zA-Z0-9-_]+)')
@@ -263,9 +262,9 @@ def python_multiline(bot, msg):
 	code = '\n'.join(bot.scripts[msg.nick]) + '\n\n'
 	bot.say(msg.target, '%s: %s' % (msg.nick, python(code)))
 
-#PATH = os.environ['PATH']
-#username = os.getlogin()
-#PATH = ':'.join(filter(lambda p: username not in p, PATH.split(':'))) # filter out virtualenv
+PATH = os.environ['PATH']
+username = os.getlogin()
+PATH = ':'.join(filter(lambda p: username not in p, PATH.split(':'))) # filter out virtualenv
 def python(code):
 	pypy = subprocess.Popen(['pypy-sandbox'], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE, env={'PATH': PATH}, universal_newlines=True, preexec_fn=os.setpgrp)
