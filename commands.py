@@ -190,9 +190,10 @@ def weather(bot, target, nick, command, text):
 	data = response.json()
 	if 'current_observation' in data:
 		current = data['current_observation']
-		output = '%s: %s, feels like %s. %s\n%s' % (
-				current['display_location']['full'], current['temperature_string'], current['feelslike_string'],
-				current['weather'], current['forecast_url'])
+		output = '%s: %s: %s | %s°C (%s°F) %sRH %smb(%s) | Wind: %s (%s°), %skm/h (%smph); Windchill: %s°C (%s°F)  | Dew @ %s°C (%s°F)' % (
+				nick, current['display_location']['full'], current['weather'], current['temp_c'], current['temp_f'], current['relative_humidity'], current['pressure_mb'], current['pressure_trend'],
+				current['wind_dir'], current['wind_degrees'], current['wind_kph'], current['wind_mph'], current['windchill_c'], current['windchill_f'],
+				current['dewpoint_c'], current['dewpoint_f'] )
 		bot.say(target, output)
 	elif 'results' in data['response']:
 		bot.say(target, '%s: got %s results. try narrowing your search' % (
