@@ -13,7 +13,7 @@ def write(text):
 
 	if stdout:
 		print(line, end='')
-	logfile.write(line)
+	# logfile.write(line)
 
 def flush():
 	logfile.flush()
