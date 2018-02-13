@@ -30,6 +30,8 @@ def reload(bot, target, nick, command, text):
 		bot.notice(nick, 'reloaded!')
 
 def calc(bot, target, nick, command, text):
+	if not text:
+		return
 	response = rs.get('https://www.calcatraz.com/calculator/api', params={'c': text})
 	bot.say(target, '%s: %s' % (nick, response.text.rstrip()))
 
