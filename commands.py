@@ -18,6 +18,8 @@ import log
 rs = requests.Session()
 rs.headers.update({'User-Agent': 'pbot'})
 
+chroot_dir = path.join(path.dirname(path.abspath(__file__)), 'chroot')
+MB = 1024 * 1024
 
 def reload(bot, target, nick, command, text):
 	import sys
