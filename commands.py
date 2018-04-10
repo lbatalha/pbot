@@ -181,10 +181,11 @@ def youtube(bot, msg):
 		return
 	video = response.json()['items'][0]
 	title = video['snippet']['title']
+	channel = video['snippet']['channelTitle']
 	duration = video['contentDetails']['duration']
 	duration = duration[2:].replace('H', 'h ').replace('M', 'm ').replace('S', 's')
 	date = video['snippet']['publishedAt'].split('T', 1)[0]
-	bot.say(msg.target, "%s's video: %s, %s, %s" % (msg.nick, title, duration, date))
+	bot.say(msg.target, "%s's video: %s, %s, by %s, %s" % (msg.nick, title, duration, channel, date))
 
 def weather(bot, target, nick, command, text):
 	url = 'https://api.wunderground.com/api/%s/conditions/q/%s.json' % (
